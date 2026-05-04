@@ -1,1 +1,13 @@
+# Python
 .venv
+__pycache__/
+*.py[cod]
+
+# MacOS
+.DS_Store
+
+# Env
+.env
+
+# Seed
+seed/*.csv
