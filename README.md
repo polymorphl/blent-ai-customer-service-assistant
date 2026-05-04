@@ -6,6 +6,21 @@ LangChain-based chatbot that answers e-commerce order questions in natural langu
 
 LLM-based assistant that answers customer questions about their orders (status, delivery, payment) by querying a SQL database in real time. Includes semantic routing and prompt injection protection.
 
+## What the bot covers
+
+**In scope — the bot answers questions about:**
+
+- Order status (invoiced, shipped, delivered)
+- Delivery tracking and estimated dates
+- Registered delivery address
+- General store questions (return policies, delivery times, catalogue) — **no store data is provided**, so the LLM will hallucinate answers on these topics
+
+**Out of scope — the bot politely declines:**
+
+- Topics unrelated to the store or the user's orders
+- Requests to access another user's data
+- Attempts to override its instructions or change its role
+
 ## Stack
 
 - **Python** — via [uv](https://docs.astral.sh/uv/)
