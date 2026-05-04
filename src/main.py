@@ -29,14 +29,18 @@ def main():
     print(MSG_READY.format(first_name=user["first_name"], last_name=user["last_name"]))
     print(MSG_QUIT_HINT)
 
+    messages = []
+
     while True:
         try:
             question = input(PROMPT_USER).strip()
             if not question:
                 continue
             try:
-                response = agent.invoke({"messages": [{"role": "user", "content": question}]})
-                answer = response["messages"][-1].content
+                messages.append({"role": "user", "content": question})
+                response = agent.invoke({"messages": messages})
+                messages = response["messages"]
+                answer = messages[-1].content
             except Exception as e:
                 if hasattr(e, "response") and e.response.status_code == 401:
                     print("\n[Erreur] Clé API Mistral invalide. Vérifiez MISTRAL_API_KEY dans votre fichier .env.\n")
