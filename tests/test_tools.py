@@ -79,3 +79,26 @@ class TestGetOrderDetails:
         tools = make_tools(user_id=32)
         result = _tool(tools, "get_order_details").invoke({"order_id": 1})
         assert result["date_delivered"] is None
+
+
+class TestGetMyDeliveryAddress:
+    # Seed data facts used in these tests:
+    # - user_id=32: address="413-9825 Dictum. Ave", city="Troyes", zip_code=38316
+    # - user_id=9999: does not exist
+
+    def test_returns_address_fields_for_authenticated_user(self):
+        tools = make_tools(user_id=32)
+        result = _tool(tools, "get_my_delivery_address").invoke({})
+        assert result["address"] == "413-9825 Dictum. Ave"
+        assert result["city"] == "Troyes"
+        assert result["zip_code"] == 38316
+
+    def test_formatted_address_combines_fields_correctly(self):
+        tools = make_tools(user_id=32)
+        result = _tool(tools, "get_my_delivery_address").invoke({})
+        assert result["formatted"] == "413-9825 Dictum. Ave, 38316 Troyes"
+
+    def test_returns_error_for_nonexistent_user(self):
+        tools = make_tools(user_id=9999)
+        result = _tool(tools, "get_my_delivery_address").invoke({})
+        assert "error" in result
