@@ -1,8 +1,9 @@
 from dotenv import load_dotenv
 
 from src.agent import create_agent
-from src.config import MSG_GOODBYE, MSG_QUIT_HINT, MSG_READY, MSG_USER_NOT_FOUND, PROMPT_ASSISTANT, PROMPT_USER
+from src.config import MSG_GOODBYE, MSG_OUT_OF_SCOPE, MSG_QUIT_HINT, MSG_READY, MSG_USER_NOT_FOUND, PROMPT_ASSISTANT, PROMPT_USER
 from src.database import query
+from src.router import make_router
 
 load_dotenv()
 
@@ -25,6 +26,7 @@ def main():
         last_name=user["last_name"],
         email=user["email"],
     )
+    router = make_router()
 
     print(MSG_READY.format(first_name=user["first_name"], last_name=user["last_name"]))
     print(MSG_QUIT_HINT)
@@ -35,6 +37,9 @@ def main():
         try:
             question = input(PROMPT_USER).strip()
             if not question:
+                continue
+            if not router(question):
+                print(PROMPT_ASSISTANT.format(answer=MSG_OUT_OF_SCOPE))
                 continue
             try:
                 messages.append({"role": "user", "content": question})
