@@ -2,7 +2,7 @@ from datetime import datetime
 
 from langchain_core.tools import tool
 
-from src.config import MONTHS_FR, STATUS_MAPPING
+from src.config import MONTHS_FR, MSG_ESCALATION, STATUS_MAPPING
 from src.database import query
 
 
@@ -38,7 +38,22 @@ def make_tools(user_id: int) -> list:
             return {"error": "Utilisateur introuvable"}
         return _format_address(rows[0])
 
-    return [get_my_orders, get_order_details, get_my_delivery_address]
+    @tool
+    def escalate_to_human(reason: str) -> dict:
+        """
+        À utiliser quand l'utilisateur a besoin d'une aide qui dépasse les capacités du bot :
+        litige, demande de remboursement, plainte formelle, situation exceptionnelle,
+        ou toute demande nécessitant un jugement humain.
+        """
+        if not reason or not reason.strip():
+            return {"error": "Le paramètre 'reason' est obligatoire."}
+        return {
+            "message": MSG_ESCALATION,
+            "escalated": True,
+            "reason": reason.strip(),
+        }
+
+    return [get_my_orders, get_order_details, get_my_delivery_address, escalate_to_human]
 
 
 def _format_order(row: dict) -> dict:
