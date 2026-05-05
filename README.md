@@ -60,6 +60,12 @@ uv sync
 uv run python -m src.main
 ```
 
+By default the bot logs in as a test user (`leo.cras.vehicula@outlook.com`). You can override this with a CLI argument:
+
+```bash
+uv run python -m src.main alice@example.com
+```
+
 ## Running tests
 
 ```bash

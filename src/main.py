@@ -1,3 +1,5 @@
+import sys
+
 from dotenv import load_dotenv
 
 from src.agent import create_agent
@@ -14,7 +16,7 @@ def _get_user_by_email(email: str) -> dict | None:
 
 
 def main():
-    email = "leo.cras.vehicula@outlook.com"  # user_id=32, used for local testing
+    email = sys.argv[1] if len(sys.argv) > 1 else "leo.cras.vehicula@outlook.com"
     user = _get_user_by_email(email)
     if not user:
         print(MSG_USER_NOT_FOUND.format(email=email))
